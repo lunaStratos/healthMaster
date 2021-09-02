@@ -2,6 +2,8 @@
 
 [![실제 동작 모습](http://img.youtube.com/vi/40DJOA-HVtg/0.jpg)](https://www.youtube.com/watch?v=40DJOA-HVtg)
 
+소개영상 https://www.youtube.com/watch?v=40DJOA-HVtg
+
 **건강마스터!**는 SK NUGU 용으로 개발된 웹사이트와 챗봇입니다. 구글 피트니스의 api를 가져오는 형식으로 어제와 오늘, 일주일, 한달, 특정 달의 조회가 가능합니다. 가입후 로그인 시 사이트에서는 최근 한달의 데이터를 조회할 수 있습니다.
 
 OAUth2 authorization code 형식으로 구현을 하였습니다. 구글 피트니스의 oauth를 받아오는 부분과 oauth를 만드는 부분을 둘 다 만들어야 했습니다.
