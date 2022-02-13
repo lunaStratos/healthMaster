@@ -45,9 +45,7 @@ passport.use(new GoogleStrategy({
   clientSecret: GOOGLE_CLIENT_SECRET,
   callbackURL: REDIRECT_URI,
 }, function(accessToken, refreshToken, profile, done) {
-  console.log(accessToken);
-  console.log(refreshToken);
-  console.log(profile.emails[0].value);
+
   const googleTime = new Date().getTime() + 3600 * 1000
   knex('Camelia_Users').where('email', profile.emails[0].value).update({
       googleAccessToken: accessToken,
@@ -55,7 +53,6 @@ passport.use(new GoogleStrategy({
       googleTokenTime: googleTime
     })
     .catch((err) => {
-      console.log(err);
       throw err
       return res.render('/login/oauthlogin.ejs', {
         result: 'mismatch'
@@ -75,9 +72,7 @@ router.use(passport.session())
 
 // oauth/login GET페이지
 router.get('/login', function(req, res) {
-  console.log(req.headers);
-  console.log(req.query.redirect_uri);
-  console.log(req.query.state);
+  
   req.session.state = req.query.state
   return res.render('login/oauthlogin.ejs')
 });
@@ -114,7 +109,7 @@ router.post('/login', function(req, res) {
       confirm: 'Y'
     })
     .then(rows => {
-      console.log(rows.length)
+
       if (rows.length == 0) { //로그인 실패
         return res.render("./login/oauthlogin.ejs", {
           result: 'login',

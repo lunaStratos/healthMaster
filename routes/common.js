@@ -51,7 +51,7 @@ router.get('/login', function(req, res) {
 
 //목표걸음 설정
 router.get('/walkgoal', function(req, res) {
-  console.log('goalwalk')
+
   if (req.session.email == undefined) {
     return res.render('./login/login.ejs')
   } else {
@@ -61,7 +61,6 @@ router.get('/walkgoal', function(req, res) {
       .then(rows => {
         if (rows.length == 0) { //실패
         } else {
-          console.log(rows[0])
 
           return res.render('./login/walkgoal.ejs', {
             walkgoal: rows[0].walkgoal,
@@ -76,8 +75,7 @@ router.get('/walkgoal', function(req, res) {
 
 //목표걸음 설정
 router.post('/walkgoal', function(req, res) {
-  console.log(req.body.walkgoalSwitch)
-  console.log(req.body.walkgoal)
+  
   if (req.session.email == undefined) {
     return res.render('./login/login.ejs')
   } else {
@@ -106,7 +104,7 @@ router.post('/checkemail', function(req, res) {
       email: email,
     })
     .then(rows => {
-      console.log('checkemail: ', rows.length)
+
       if (rows.length == 0) { //성공
         res.send({
           result: true
@@ -128,9 +126,7 @@ router.post('/login', function(req, res) {
   console.log('login')
   const email = (req.body.email).toLowerCase();
   const password = req.body.password;
-  console.log('password ', password)
-  console.log('email ', email)
-
+  
   //true 나오면 return
   let checkEmail = checkCode.checkEmail(email)
   let checkPassword = checkCode.checkPassword(password)
@@ -204,21 +200,21 @@ const refreshToken_action = (emailToken) => function(callback) {
       email: emailToken
     }
     //토큰 타임 비교해서 googleTokenTime이 크면 갱신하지 않는다.
-    console.log('rows[0].googleTokenTime ', rows[0].googleTokenTime)
+
     if (rows[0].googleTokenTime == null) {
       callback(null, false)
     } else {
       // 갱신을 안하면 기존 DB에서 읽어서 처리
       if (rows[0].googleTokenTime > (new Date().getTime())) {
-        console.log('rows[0].googleTokenTime : 갱신안함')
+
         knex('Camelia_Users').select('googleAccessToken').where('email', emailToken)
           .then(rows => {
-            console.log('googleTokenSQL ', rows[0])
+
             callback(null, rows[0].googleAccessToken)
           })
         // 갱신시 request 해서 callback 처리된 데이터 가져오기
       } else {
-        console.log('rows[0].googleTokenTime : 갱신함')
+
         refreshToken(insertData, function(token) {
           console.log('token : ', token)
           callback(null, token)
@@ -257,7 +253,7 @@ router.get('/dashboard', async function(req, res) {
 
       const fitness = await moduleRequest(insertData, 'fitness')
       const distance = await moduleRequest(insertData, 'distance')
-      console.log(fitness)
+
       if (fitness.code != 200 || distance.code != 200) {
         return res.render('login/index.ejs', {
           result: false
@@ -312,9 +308,7 @@ router.post('/forgotPassword', function(req, res) {
   console.log('forgotPassword')
   const email = (req.body.email).toLowerCase();
   const name = req.body.name;
-  console.log('email ', email)
-  console.log('name ', name)
-
+  
   //true 나오면 return
   let checkEmail = checkCode.checkEmail(email)
   let checkName = checkCode.checkName(name)
@@ -334,7 +328,7 @@ router.post('/forgotPassword', function(req, res) {
       name: name
     })
     .then(rows => {
-      console.log(rows.length)
+
       if (rows.length == 0) { //로그인 성공
         return res.render('login/forgot-password.ejs', {
           result: 'error'
@@ -380,13 +374,7 @@ router.post('/register', function(req, res) {
   const password = req.body.password;
   const location = req.body.location;
 
-  console.log('name ', name)
-  console.log('email ', email)
-  console.log('year ', year)
-  console.log('sex ', sex)
-  console.log('password ', password)
-  console.log('location ', location)
-
+  
   //true 나오면 return
   let checkEmail = checkCode.checkEmail(email)
   let checkPassword = checkCode.checkPassword(password)
@@ -441,8 +429,7 @@ router.post('/register', function(req, res) {
               subject: '건강마스터 인증메일 입니다.',
               html: data
             }, (err, info) => {
-              console.log(info.envelope);
-              console.log(info.messageId);
+              
             });
           }
 
@@ -505,10 +492,7 @@ router.post('/modify', function(req, res) {
     const year = req.body.year
     const name = req.body.name
 
-    console.log('name ', name)
-    console.log('year ', year)
-    console.log('password ', password)
-    console.log('location ', location)
+
 
     //true 나오면 return
     let checkPassword = checkCode.checkPassword(password)
@@ -571,8 +555,6 @@ router.get('/registerAuth', function(req, res) {
     return res.render('/')
   }
 
-  console.log('registercode ', registercode)
-
   // 찾아서 데이터 Y로 변경
   knex('Camelia_Users').where({
       email: email,
@@ -633,14 +615,12 @@ router.get('/setting', function(req, res) {
 router.post('/deleteAccount', function(req, res) {
   const email = req.session.email
   const password = req.body.password;
-  console.log(email)
-  console.log(password)
+
   knex('Camelia_Users').where({
       email: email,
       password: password
     })
     .del().then((rows) => {
-      console.log('rows: ', rows)
       if (rows == 0) {
         return res.render('./login/setting.ejs', {
           result: 'fail'
@@ -680,7 +660,7 @@ router.get('/deleteaccount', function(req, res) {
       confirm: 'N'
     })
     .del().then((rows) => {
-      console.log('rows: ', rows)
+
       return res.render('index.ejs')
     })
     .catch((err) => {
